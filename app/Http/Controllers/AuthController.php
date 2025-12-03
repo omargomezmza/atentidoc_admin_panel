@@ -51,6 +51,7 @@ class AuthController extends Controller
         ]);
 
         try {
+            dd('antes de ejecutarse el inicio de TRANSACCIÓN DB');
             // Iniciar transacción de base de datos
             DB::beginTransaction();
 
