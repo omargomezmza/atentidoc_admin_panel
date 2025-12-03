@@ -36,11 +36,13 @@ class ApiService
                 ]); 
             */
 
+            dd('hola');
             $response = $this->getHttpClient()
                 ->post("{$this->baseUrl}/api/auth/login", [
                     'email' => $email,
                     'password' => $password,
                 ]);
+            dd('chau');
             // Si la respuesta no es exitosa
             if ($response->failed()) {
                 /* Log::warning('API login failed', [
