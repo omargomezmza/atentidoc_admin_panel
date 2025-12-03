@@ -52,3 +52,5 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Cambiar CMD
 CMD ["docker-entrypoint.sh"]
+
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
