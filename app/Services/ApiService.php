@@ -43,18 +43,18 @@ class ApiService
                 ]);
             // Si la respuesta no es exitosa
             if ($response->failed()) {
-                Log::warning('API login failed', [
+                /* Log::warning('API login failed', [
                     'email' => $email,
                     'status' => $response->status(),
                     'body' => $response->body(),
-                ]);
+                ]); */
 
                 throw new \Exception('Credenciales inválidas', $response->status());
             }
 
             $data = $response->json();
             
-            //dd($data);
+            dd($data);
             // Validar que la respuesta tenga los datos necesarios
             if (!isset($data['accessToken']) || !isset($data['user'])) {
                 Log::error('API response missing required fields', ['data' => $data]);
