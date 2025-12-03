@@ -110,7 +110,7 @@ class AuthController extends Controller
             // 3.2. Calcular fecha de expiración del token
             $expiresAt = now()->addSeconds($apiResponse['expires_in'] ?? 3600);
 
-            //dd("aqui", $apiResponse, $user);
+            dd("aqui", $apiResponse, $current_user);
             // 3.3. Guardar token en tabla api_tokens
             $api_token = ApiToken::where('user_id', $current_user->api_user_id)->first();
             if ($api_token) {
@@ -159,7 +159,7 @@ class AuthController extends Controller
             // Revertir transacción en caso de error
             DB::rollBack();
 
-            //dd("Email", $credentials['email'], $e);
+            dd("Email", $credentials['email'], $e);
 
             /* Log::error('Error en login', [
                 'email' => $credentials['email'],
