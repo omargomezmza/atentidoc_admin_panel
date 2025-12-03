@@ -42,7 +42,7 @@ class ApiService
                     'email' => $email,
                     'password' => $password,
                 ]);
-            dd('chau', $response);
+            //dd('chau', $response);
             // Si la respuesta no es exitosa
             if ($response->failed()) {
                 /* Log::warning('API login failed', [
@@ -56,7 +56,7 @@ class ApiService
 
             $data = $response->json();
             
-            dd($data);
+            dd('chau 2', $data);
             // Validar que la respuesta tenga los datos necesarios
             if (!isset($data['accessToken']) || !isset($data['user'])) {
                 Log::error('API response missing required fields', ['data' => $data]);
