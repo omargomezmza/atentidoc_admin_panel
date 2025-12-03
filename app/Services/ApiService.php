@@ -56,7 +56,7 @@ class ApiService
 
             $data = $response->json();
             
-            dd('chau 2', $data);
+            //dd('chau 2', $data);
             // Validar que la respuesta tenga los datos necesarios
             if (!isset($data['accessToken']) || !isset($data['user'])) {
                 Log::error('API response missing required fields', ['data' => $data]);
