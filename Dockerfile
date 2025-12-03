@@ -56,7 +56,7 @@ COPY . /var/www/html
 RUN composer run-script post-autoload-dump --no-interaction
 
 # ===== COMPILAR ASSETS =====
-RUN pnpm run build
+RUN pnpm build
 
 # ===== LIMPIAR DEPENDENCIAS DE DESARROLLO =====
 # RUN pnpm prune --prod
