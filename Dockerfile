@@ -1,7 +1,7 @@
 # Usar imagen oficial de PHP con Apache
 FROM php:8.2-apache
 
-# Instalar dependencias del sistema (incluyendo Node.js)
+# Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -14,10 +14,12 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo_pgsql pgsql mbstring exif pcntl bcmath gd \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Instalar Node.js 20.x y npm
+# Instalar Node.js 20.x
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g npm@latest
+    && apt-get install -y nodejs
+
+# Instalar pnpm globalmente
+RUN npm install -g pnpm@latest
 
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -26,11 +28,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # Copiar archivos de dependencias primero (mejor caché de Docker)
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 COPY composer.json composer.lock ./
 
-# Instalar dependencias de Node.js
-RUN npm ci --no-audit
+# Instalar dependencias de Node.js con pnpm
+RUN pnpm install --frozen-lockfile --prod
 
 # Instalar dependencias de PHP
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
@@ -39,7 +41,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-di
 COPY . /var/www/html
 
 # Compilar assets con Vite para producción
-RUN npm run build
+RUN pnpm run build
 
 # Crear directorios y establecer permisos
 RUN mkdir -p /var/www/html/storage/framework/cache \
