@@ -26,18 +26,22 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # ===== DEPENDENCIAS DE NODE.JS =====
-# Copiar solo archivos de configuración para mejor caché
+# Copiar package.json y lockfile
 COPY package.json pnpm-lock.yaml ./
-COPY vite.config.js postcss.config.js tailwind.config.js ./
+
+# Copiar archivos de configuración si existen (usando wildcards)
+COPY vite.config.* ./
+COPY postcss.config.* ./
+COPY tailwind.config.* ./
 
 # Instalar dependencias de Node
 RUN pnpm install --frozen-lockfile
 
 # ===== DEPENDENCIAS DE PHP =====
-# Copiar solo composer.json y composer.lock
+# Copiar composer files
 COPY composer.json composer.lock ./
 
-# Instalar sin ejecutar scripts (artisan aún no existe)
+# Instalar sin ejecutar scripts
 RUN composer install \
     --no-dev \
     --optimize-autoloader \
@@ -49,14 +53,13 @@ RUN composer install \
 COPY . /var/www/html
 
 # ===== EJECUTAR SCRIPTS DE COMPOSER =====
-# Ahora sí ejecutar los scripts post-install (artisan ya existe)
 RUN composer run-script post-autoload-dump --no-interaction
 
 # ===== COMPILAR ASSETS =====
 RUN pnpm run build
 
 # ===== LIMPIAR DEPENDENCIAS DE DESARROLLO =====
-RUN pnpm prune --prod
+# RUN pnpm prune --prod
 
 # ===== CREAR DIRECTORIOS Y PERMISOS =====
 RUN mkdir -p \
@@ -71,11 +74,8 @@ RUN chmod -R 775 storage bootstrap/cache
 
 # ===== CONFIGURAR APACHE =====
 RUN a2enmod rewrite
-
-# Cambiar DocumentRoot
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
-# Configuración adicional
 RUN echo '<Directory /var/www/html/public>\n\
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
