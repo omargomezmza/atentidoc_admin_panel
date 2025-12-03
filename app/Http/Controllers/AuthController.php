@@ -51,9 +51,9 @@ class AuthController extends Controller
         ]);
 
         try {
-            dd('antes de ejecutarse el inicio de TRANSACCIÓN DB');
+            //dd('antes de ejecutarse el inicio de TRANSACCIÓN DB');
             // Iniciar transacción de base de datos
-            DB::beginTransaction();
+            //DB::beginTransaction();
 
             // 2. ENVIAR CREDENCIALES A LA API
             //Log::info('Intentando login', ['email' => $credentials['email']]);
