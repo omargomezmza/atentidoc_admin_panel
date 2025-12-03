@@ -18,7 +18,8 @@
                 <div class="relative z-10 text-center">
                     <!-- Logo -->
                     <div class="mb-6 inline-block">
-                        <svg class="w-32 h-32 md:w-40 md:h-40" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <img src="./Logo_Tran.png" alt="Logo AtentiDoc">
+                        {{-- <svg class="w-32 h-32 md:w-40 md:h-40" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <!-- Stethoscope -->
                             <path d="M100 140C100 140 85 155 70 155C55 155 45 145 45 130C45 115 55 105 70 105C85 105 100 120 100 120" 
                                   stroke="url(#gradient1)" stroke-width="8" stroke-linecap="round"/>
@@ -45,7 +46,7 @@
                                     <stop offset="100%" style="stop-color:#DC2626;stop-opacity:1" />
                                 </linearGradient>
                             </defs>
-                        </svg>
+                        </svg> --}}
                     </div>
                     
                     <!-- Brand Name -->

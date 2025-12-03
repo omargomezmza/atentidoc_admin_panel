@@ -183,7 +183,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $auth = Auth::user();
-        $user = $auth->id;
+        $user = User::find($auth->id);
 
         if ($user) {
             // Intentar cerrar sesión en la API
