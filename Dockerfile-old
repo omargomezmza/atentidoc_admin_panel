@@ -11,8 +11,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     libpq-dev \
-    && docker-php-ext-install pdo_pgsql pgsql mbstring exif pcntl bcmath gd \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && docker-php-ext-install pdo_pgsql pgsql mbstring exif pcntl bcmath gd
 
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -24,17 +23,10 @@ WORKDIR /var/www/html
 COPY . /var/www/html
 
 # Instalar dependencias de PHP
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# IMPORTANTE: Crear directorios y establecer permisos ANTES de cambiar el usuario
-RUN mkdir -p /var/www/html/storage/framework/cache \
-    /var/www/html/storage/framework/sessions \
-    /var/www/html/storage/framework/views \
-    /var/www/html/storage/logs \
-    /var/www/html/bootstrap/cache
-
-# Dar permisos completos a www-data
-RUN chown -R www-data:www-data /var/www/html
+# Configurar permisos
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Habilitar mod_rewrite de Apache
@@ -42,26 +34,23 @@ RUN a2enmod rewrite
 
 # Configurar Apache para Laravel
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
-
-# Agregar configuración de directorio
 RUN echo '<Directory /var/www/html/public>\n\
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
     Require all granted\n\
 </Directory>' >> /etc/apache2/apache2.conf
 
-# IMPORTANTE: Cambiar ServerName para evitar warnings
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-
 # Exponer puerto
 EXPOSE 80
 
-# Script de inicio
+# Comando de inicio
+CMD ["sh", "-c", "php artisan config:cache && php artisan route:cache && php artisan view:cache && apache2-foreground"]
+
+# Agregar antes de CMD
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# NO cambiar a www-data aquí, Apache lo manejará
-# USER www-data <- ELIMINAR ESTA LÍNEA
-
-# Comando de inicio
+# Cambiar CMD
 CMD ["docker-entrypoint.sh"]
+
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
