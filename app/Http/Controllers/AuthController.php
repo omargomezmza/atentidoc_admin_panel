@@ -55,7 +55,7 @@ class AuthController extends Controller
             DB::beginTransaction();
 
             // 2. ENVIAR CREDENCIALES A LA API
-            Log::info('Intentando login', ['email' => $credentials['email']]);
+            //Log::info('Intentando login', ['email' => $credentials['email']]);
             
             $apiResponse = $this->apiService->login(
                 $credentials['email'],
@@ -105,7 +105,7 @@ class AuthController extends Controller
                 );
             }
 
-            Log::info('Usuario creado/actualizado', ['user_id' => $current_user->id]);
+            //Log::info('Usuario creado/actualizado', ['user_id' => $current_user->id]);
 
             // 3.2. Calcular fecha de expiración del token
             $expiresAt = now()->addSeconds($apiResponse['expires_in'] ?? 3600);
@@ -134,16 +134,16 @@ class AuthController extends Controller
                 );
             }
 
-            Log::info('Token guardado', [
+            /* Log::info('Token guardado', [
                 'user_id' => $current_user->id,
                 'expires_at' => $expiresAt->toDateTimeString(),
-            ]);
+            ]); */
 
             // 4. CREAR SESIÓN EN LARAVEL
             // Esto crea una cookie de sesión que Laravel maneja automáticamente
             Auth::login($current_user, $request->filled('remember') ?? false);
 
-            Log::info('Sesión creada', ['user_id' => $current_user->id]);
+            //Log::info('Sesión creada', ['user_id' => $current_user->id]);
 
             // Confirmar transacción
             DB::commit();
@@ -159,13 +159,13 @@ class AuthController extends Controller
             // Revertir transacción en caso de error
             DB::rollBack();
 
-            dd("Email", $credentials['email'], $e);
+            //dd("Email", $credentials['email'], $e);
 
-            Log::error('Error en login', [
+            /* Log::error('Error en login', [
                 'email' => $credentials['email'],
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-            ]);
+            ]); */
 
             // Mensaje genérico para el usuario (no revelar detalles de seguridad)
             return back()
@@ -192,10 +192,10 @@ class AuthController extends Controller
                     $this->apiService->logout($token);
                 }
             } catch (\Exception $e) {
-                Log::warning('Error al cerrar sesión en API', [
+                /* Log::warning('Error al cerrar sesión en API', [
                     'user_id' => $user->id,
                     'error' => $e->getMessage(),
-                ]);
+                ]); */
                 // Continuar con el logout local aunque falle el de la API
             }
 
