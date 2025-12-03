@@ -61,7 +61,7 @@ class AuthController extends Controller
                 $credentials['email'],
                 $credentials['password']
             );
-            //dd($apiResponse);
+            dd($apiResponse);
             // La respuesta de la API debería tener esta estructura:
             // {
             //     "access_token": "eyJ0eXAiOiJKV1QiLCJhbGc...",
