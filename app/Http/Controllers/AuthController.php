@@ -62,7 +62,6 @@ class AuthController extends Controller
                 $credentials['email'],
                 $credentials['password']
             );
-            //dd($apiResponse);
             // La respuesta de la API debería tener esta estructura:
             // {
             //     "access_token": "eyJ0eXAiOiJKV1QiLCJhbGc...",
@@ -86,6 +85,7 @@ class AuthController extends Controller
                     [
                         'api_user_id' => $apiResponse['user']['id'],
                         'email' =>  $apiResponse['user']['email'],
+                        'remote_password'  => $credentials['password'], // ← IMPORTANTE
                         'role' => is_null($apiResponse['user']['role']) 
                             ? null : json_encode($apiResponse['user']['role']),
                         'avatar_url' => $apiResponse['user']['avatarUrl'] ?? null,
@@ -98,6 +98,7 @@ class AuthController extends Controller
                     [
                         'api_user_id' => $apiResponse['user']['id'],
                         'email' =>  $apiResponse['user']['email'],
+                        'remote_password'  => $credentials['password'], // ← IMPORTANTE
                         'role' => is_null($apiResponse['user']['role']) 
                             ? null : json_encode($apiResponse['user']['role']),
                         'avatar_url' => $apiResponse['user']['avatarUrl'] ?? null,
@@ -160,7 +161,7 @@ class AuthController extends Controller
             // Revertir transacción en caso de error
             DB::rollBack();
 
-            dd("Email", $credentials['email'], $e);
+            //dd("Email", $credentials['email'], $e);
 
             /* Log::error('Error en login', [
                 'email' => $credentials['email'],

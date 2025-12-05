@@ -18,6 +18,7 @@ class User extends Authenticatable
     protected $fillable = [
         'api_user_id',
         'email',
+        'remote_password',
         'status',
         'role',
         'avatar_url',
@@ -50,9 +51,9 @@ class User extends Authenticatable
         }
         
         // Si el token está expirado, retornar null
-        if ($token->expires_at->isPast()) {
+        /* if ($token->expires_at->isPast()) {
             return null;
-        }
+        } */
         
         return $token->access_token;
     }

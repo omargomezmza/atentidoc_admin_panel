@@ -62,18 +62,39 @@
             />
             
             <x-admin.menu-item 
-                icon="users"
-                label="Usuarios"
+                icon=""
+                label="Recursos"
                 :hasSubmenu="true"
                 route="#{{-- admin.users --}}"
-            />
+            >
+                <x-admin.menu-item 
+                    icon="users"
+                    label="Doctores"
+                    :hasSubmenu="false"
+                    route="admin.list.doctor"
+                />
+
+                <x-admin.menu-item 
+                    icon="users"
+                    label="Pacientes"
+                    :hasSubmenu="false"
+                    route="admin.list.patient"
+                />
+
+                <x-admin.menu-item 
+                    icon="users"
+                    label="Admins"
+                    :hasSubmenu="false"
+                    route="admin.list.admin"
+                />
+            </x-admin.menu-item>
         </div>
     </nav>
     
     <!-- Logo Section -->
     <div class="p-6 border-t border-white/20">
         <div class="flex flex-col items-center">
-            <img src="./Logo_Blanco.png" alt="Logo de AtentiDoc" class="w-12 h-12 mb-2">
+            <img src="{{ asset('Logo_Blanco.png') }}" alt="Logo de AtentiDoc" class="w-12 h-12 mb-2">
             {{-- <svg class="w-12 h-12 mb-2" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M100 140C100 140 85 155 70 155C55 155 45 145 45 130C45 115 55 105 70 105C85 105 100 120 100 120" 
                       stroke="white" stroke-width="8" stroke-linecap="round" opacity="0.9"/>

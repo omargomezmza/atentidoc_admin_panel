@@ -3,18 +3,48 @@
 @section('title', 'Panel de Administrador')
 
 @section('content')
-<div class="max-w-7xl mx-auto">
+<div class="max-w-7xl mx-auto" x-data="{
+    'in_process':null,
+    async deleting() {
+        const URI = '{{ route("admin.delete.user") }}/' + this.in_process;
+        console.log('DELETING', URI);
+        try {
+            const res = await axios.delete(URI);
+            console.log(res.data);
+            
+            if (res.data.status === 'OK') {
+                alert('El usuario fue eliminado exitosamente.');
+            }
+            else {
+                alert('Ocurrió un error durante el proceso de eliminación de usuario. Intentelo de nuevo más tarde.');
+            }
+            window.location.reload();
+        }
+        catch (e) {
+            alert('Ocurrió un error durante el proceso de eliminación de usuario. Intentelo de nuevo más tarde.');
+            console.log('ERROR: ', e);
+        }
+    }
+}">
     
     <!-- Header Section -->
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Panel de Administrador</h1>
-        <p class="text-gray-600">Bienvenido al panel de control de AtentiDoc</p>
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Lista de Pacientes</h1>
+        <p class="text-gray-600">Puede leer, actualizar y eliminar esta información</p>
     </div>
     
     <!-- Search Box -->
     <div class="mb-8">
         <x-admin.search-box placeholder="Buscar en el panel..." />
     </div>
+
+    <!-- Botón de Creación -->
+    <a class="px-6 py-3 bg-green-200 text-gray-700 font-medium rounded-lg hover:bg-green-300 
+        transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 
+        focus:ring-green-500"
+        href="{{ route('admin.create.user') }}">
+        Crear Usuario
+    </a>
     
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -119,9 +149,9 @@
         emptyMessage="No hay usuarios registrados"
     /> --}}
 
-    {{-- @php
-        // Simulación de datos (reemplazar con query real)
-        $requests = collect([
+    @php
+         // Simulación de datos (reemplazar con query real)
+        /* $requests = collect([
             (object)[
                 'id' => 1,
                 'patient_name' => 'Juan Pérez',
@@ -146,20 +176,26 @@
                 'status' => 'rejected',
                 'created_at' => now()->subWeek(),
             ],
-        ]);
+        ]); */
+        $content = array_map(fn ($el) => (object) $el, $list['content']); 
+        //dd($list, $content);
     @endphp
     <x-admin.table 
         :columns="[
             [
-                'label' => 'Paciente',
-                'field' => 'patient_name',
-                'component' => 'admin.table-avatar',
-                'nameField' => 'patient_name',
-                'subtitleField' => 'patient_email',
+                'label' => 'ID',
+                'field' => 'id',
             ],
             [
-                'label' => 'Profesional',
-                'field' => 'professional_name',
+                'label' => 'Nombre',
+                'field' => 'firstName',
+                'component' => 'admin.table-avatar',
+                'nameField' => 'firstName',
+                'subtitleField' => 'lastName',
+            ],
+            [
+                'label' => 'Email',
+                'field' => 'email',
             ],
             [
                 'label' => 'Estado',
@@ -167,34 +203,45 @@
                 'component' => 'admin.table-badge',
                 'colorMap' => [
                     'pending' => 'yellow',
-                    'approved' => 'green',
+                    'ACTIVE' => 'green',
                     'rejected' => 'red',
                 ],
                 'labelMap' => [
                     'pending' => 'Pendiente',
-                    'approved' => 'Aprobada',
-                    'rejected' => 'Rechazada',
+                    'ACTIVE' => 'Aprobado',
+                    'rejected' => 'Rechazado',
                 ],
             ],
             [
-                'label' => 'Fecha',
-                'field' => 'created_at',
+                'label' => 'Fecha de Nacimiento',
+                'field' => 'birthDate',
                 'component' => 'admin.table-date',
                 'format' => 'd/m/Y',
+            ],
+            [
+                'label' => 'Género',
+                'field' => 'gender',
+                'component' => 'admin.table-badge',
+                'labelMap' => [
+                    'MALE' => 'Hombre',
+                    'FEMALE' => 'Mujer',
+                    'OTHER' => 'Otro',
+                    null => '--',
+                ],
             ],
             [
                 'label' => 'Acciones',
                 'field' => 'id',
                 'component' => 'admin.table-actions',
-                'viewRoute' => fn($row) => '#', //route('admin.requests.show', $row->id),
-                'editRoute' => fn($row) => '#', //route('admin.requests.edit', $row->id),
+                'viewRoute' => fn($row) => route('admin.show.user', $row->id),
+                'editRoute' => fn($row) => route('admin.edit.user', $row->id),
                 'deleteRoute' => fn($row) => '#', //route('admin.requests.destroy', $row->id),
                 'viewTarget' => 'simple-modal',
                 'deleteTarget'=> 'simple-modal',
             ],
         ]"
-        :data="$requests"
-    /> --}}
+        :data="$content"
+    />
 
     <!-- Botón para abrir -->
     {{-- <x-modal-trigger target="simple-modal">
@@ -202,10 +249,10 @@
     </x-modal-trigger> --}}
 
     <!-- Modal -->
-    <x-modal name="simple-modal" title="Confirmación" size="md">
+    <x-modal name="simple-modal" title="¿Eliminar Usuario?" size="md">
         <div class="space-y-4">
-            <p class="text-gray-600">
-                ¿Estás seguro de que deseas realizar esta acción?
+            <p class="text-red-600">
+                ¿Estás seguro de que desea ELIMINAR este usuario?
             </p>
             <p class="text-sm text-gray-500">
                 Esta acción no se puede deshacer.
@@ -219,9 +266,9 @@
                     transition-colors">
                     Cancelar
                 </button>
-                <button type="button" class="px-4 py-2 bg-teal-600 text-white rounded-lg 
-                    hover:bg-teal-700 transition-colors">
-                    Confirmar
+                <button type="button" class="px-4 py-2 bg-red-600 text-white rounded-lg 
+                    hover:bg-red-700 transition-colors" x-on:click="deleting()">
+                    ELIMINAR
                 </button>
             </div>
         </x-slot:footer>

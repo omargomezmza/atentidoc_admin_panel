@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Panel de Administrador') - AtentiDoc</title>
-    <link rel="icon" href="Logo_Tran.png" type="image/png">
+    <link rel="icon" href="{{ asset('Logo_Tran.png') }}" type="image/png">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -38,6 +38,50 @@
         
     </div>
     
+
+        @if(session('success'))
+            <x-modal show="true" name="success-modal" title="Proceso exitoso" size="md">
+                <div class="space-y-4">
+                    <h2> 
+                        ¡El proceso fue exitoso!
+                    </h2>
+                </div>
+
+                <x-slot:footer>
+                    <div class="flex justify-end space-x-3">
+                        
+                        <button type="button" @click="$dispatch('close-modal', { name: 'success-modal' })" 
+                             class="px-4 py-2 bg-green-600 text-white rounded-lg 
+                            hover:bg-green-700 transition-colors">
+                            OK
+                        </button>
+                    </div>
+                </x-slot:footer>
+            </x-modal>
+        @endif  
+
+
+        @if(session('error'))
+            <x-modal show="true" name="error-modal" title="Ocurrió un error" size="md">
+                <div class="space-y-4">
+                    <h2> 
+                        Revisa los errores y vuelve a intentarlo.
+                    </h2>
+                </div>
+
+                <x-slot:footer>
+                    <div class="flex justify-end space-x-3">                        
+                        <button type="button" @click="$dispatch('close-modal', { name: 'error-modal' })"  
+                            type="button" class="px-4 py-2 bg-red-600 text-white rounded-lg 
+                            hover:bg-red-700 transition-colors">
+                            OK
+                        </button>
+                    </div>
+                </x-slot:footer>
+            </x-modal>
+        @endif  
+        
+
     @stack('scripts')
 </body>
 </html>

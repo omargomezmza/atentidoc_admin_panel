@@ -1,6 +1,9 @@
 <?php
 namespace App\Services;
 
+use App\Models\ApiToken;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -67,7 +70,7 @@ class ApiService
 
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error('API connection error', ['error' => $e->getMessage()]);
-            dd('API connection error', ['error' => $e->getMessage()]);
+            //dd('API connection error', ['error' => $e->getMessage()]);
             throw new \Exception('No se pudo conectar con el servidor de autenticación');
         }
     }
@@ -82,38 +85,145 @@ class ApiService
      * @return array
      * @throws \Exception
      */
+    /* 
+        public function makeAuthenticatedRequest(
+            string $method, 
+            string $endpoint, 
+            array $data = [], 
+            //string $token
+        ): array {
+            try {
+                
+
+                $auth = Auth::user();
+                $user = User::find($auth->id);
+                $token = $user->getValidToken();
+                
+                $response = $this->getHttpClient()
+                    ->withToken($token)
+                    ->$method("{$this->baseUrl}/{$endpoint}", $data);
+                if ($response->failed()) {
+                    // Si es 401, el token expiró o es inválido
+                    if ($response->status() === 401 || $response->status() === 403) {
+
+                        $refreshToken = $this->refreshRemoteToken($user);
+
+                        if (is_null($refreshToken)) {
+                            throw new \Exception('Error de Autenticación en la API');
+                        }
+
+                        $response = $this->getHttpClient()
+                            ->withToken($refreshToken)
+                            ->$method("{$this->baseUrl}/{$endpoint}", $data);
+
+                        return $response->json();
+                        //throw new \Exception('Token inválido o expirado', 401);
+                    }
+
+
+
+                    //dd("{$this->baseUrl}/{$endpoint}", $response);
+
+                    throw new \Exception('Error en la petición a la API');
+                }
+
+                if ($response->status() === 204) 
+                {
+                    return [];
+                }
+
+                return $response->json();
+
+            } catch (\Illuminate\Http\Client\ConnectionException $e) {
+                Log::error('API connection error', ['error' => $e->getMessage()]);
+                throw new \Exception('No se pudo conectar con el servidor');
+            }
+        } 
+    */
     public function makeAuthenticatedRequest(
         string $method, 
         string $endpoint, 
-        array $data = [], 
-        string $token
+        array $data = [],
     ): array {
+
         try {
-            
-            /* 
-                $response = Http::timeout($this->timeout)
-                ->withToken($token)
-                ->$method("{$this->baseUrl}/{$endpoint}", $data); 
-            */
+
+            $auth = Auth::user();
+            $user = User::find($auth->id);
+            $token = $user->getValidToken();
+
             $response = $this->getHttpClient()
                 ->withToken($token)
                 ->$method("{$this->baseUrl}/{$endpoint}", $data);
+
+            // --- Si falla la request ---
             if ($response->failed()) {
-                // Si es 401, el token expiró o es inválido
-                if ($response->status() === 401) {
-                    throw new \Exception('Token inválido o expirado', 401);
+
+                // Token inválido → refrescar token
+                if ($response->status() === 401 || $response->status() === 403) {
+
+                    $refreshToken = $this->refreshRemoteToken($user);
+
+                    if (is_null($refreshToken)) {
+                        return [
+                            'ok' => false,
+                            'status' => 401,
+                            'message' => 'Error de autenticación en la API',
+                            'errors' => []
+                        ];
+                    }
+
+                    $response = $this->getHttpClient()
+                        ->withToken($refreshToken)
+                        ->$method("{$this->baseUrl}/{$endpoint}", $data);
+
+                    // si vuelve a fallar después del refresh
+                    if ($response->failed()) {
+                        return [
+                            'ok' => false,
+                            'status' => $response->status(),
+                            'message' => 'La API rechazó la autenticación aun tras refrescar token.',
+                            'errors' => $response->json('errors') ?? []
+                        ];
+                    }
                 }
 
-                throw new \Exception('Error en la petición a la API', $response->status());
+                // Manejo de errores genéricos de la API
+                return [
+                    'ok' => false,
+                    'status' => $response->status(),
+                    'message' => $response->json('message') ?? 'Error en la petición a la API',
+                    'errors' => $response->json('errors') ?? []
+                ];
             }
 
-            return $response->json();
+            // --- Sin contenido ---
+            if ($response->status() === 204) {
+                return [
+                    'ok' => true,
+                    'status' => 204,
+                    'data' => []
+                ];
+            }
+
+            // --- Todo OK ---
+            return [
+                'ok' => true,
+                'status' => $response->status(),
+                'data' => $response->json()
+            ];
 
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error('API connection error', ['error' => $e->getMessage()]);
-            throw new \Exception('No se pudo conectar con el servidor');
+
+            return [
+                'ok' => false,
+                'status' => 0,
+                'message' => 'No se pudo conectar con el servidor',
+                'errors' => []
+            ];
         }
     }
+
 
     /**
      * Refrescar el token de acceso
@@ -122,25 +232,65 @@ class ApiService
      * @return array
      * @throws \Exception
      */
-    public function refreshToken(string $refreshToken): array
-    {
-        try {
-            $response = $this->getHttpClient()
-                ->post("{$this->baseUrl}/auth/refresh", [
-                    'refresh_token' => $refreshToken,
-                ]);
+    /* 
+        public function refreshToken(string $refreshToken): array
+        {
+            try {
+                $response = $this->getHttpClient()
+                    ->post("{$this->baseUrl}/auth/refresh", [
+                        'refresh_token' => $refreshToken,
+                    ]);
 
-            if ($response->failed()) {
-                throw new \Exception('No se pudo refrescar el token', $response->status());
+                if ($response->failed()) {
+                    throw new \Exception('No se pudo refrescar el token', $response->status());
+                }
+
+                return $response->json();
+
+            } catch (\Illuminate\Http\Client\ConnectionException $e) {
+                Log::error('API connection error on refresh', ['error' => $e->getMessage()]);
+                throw new \Exception('No se pudo conectar con el servidor');
             }
+        } 
+    */
+    private function refreshRemoteToken(User $user)
+    {
+        $email    = $user->email;
+        $password = $user->remote_password; // ← PASSWORD EN TEXTO PLANO
 
-            return $response->json();
-
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error('API connection error on refresh', ['error' => $e->getMessage()]);
-            throw new \Exception('No se pudo conectar con el servidor');
+        if (!$password) {
+            return null;
         }
+
+        $login = $this->login($email, $password);
+
+        if (is_null($login['accessToken']) || !isset($login['accessToken']) || !$login['accessToken']) {
+            return null;
+        }
+
+        $api_user_id = $login['user']['id'];
+        User::where('api_user_id', $api_user_id)->first();
+
+        $api_token = ApiToken::where('user_id', $api_user_id)->first();
+        $api_token->update(
+            [
+                'user_id' => $user->id, // Buscar por user_id
+                'access_token' => $login['accessToken'],
+                'refresh_token' => $login['accessToken'] ?? null,
+                'expires_at' => null,
+            ]
+        );
+        // Guardar nuevo token
+        $user->update([
+            'role' => is_null($login['user']['role']) 
+                ? null : json_encode($login['user']['role']),
+            'avatar_url' => $login['user']['avatarUrl'] ?? null,
+            'status' => $login['user']['status'] ?? null,
+        ]);
+
+        return $login['accessToken'];
     }
+
 
     /**
      * Cerrar sesión en la API

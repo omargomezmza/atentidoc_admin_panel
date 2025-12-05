@@ -22,6 +22,7 @@
         @if($hasSubmenu) @click.prevent="open = !open" @endif
         class="flex items-center justify-between px-3 py-3 rounded-lg transition-all duration-200 group {{ $isActive ? 'bg-white/20 text-white shadow-lg' : 'text-teal-50 hover:bg-white/10 hover:text-white' }}"
     >
+    
         <div class="flex items-center space-x-3">
             <svg class="w-5 h-5 {{ $isActive ? 'text-white' : 'text-teal-100 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {!! $icons[$icon] ?? $icons['users'] !!}

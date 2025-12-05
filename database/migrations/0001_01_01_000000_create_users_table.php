@@ -18,6 +18,7 @@ return new class extends Migration
             
             // Datos mínimos necesarios para Laravel Auth
             $table->string('email')->unique();
+            $table->string('remote_password')->nullable(); // TODO: provisorio
 
             // Datos adicionales (opcional)
             $table->string('status')->nullable();

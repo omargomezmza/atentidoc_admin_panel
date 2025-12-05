@@ -36,7 +36,7 @@ return [
     ],
 
     'api' => [
-        'base_url' => env('API_BASE_URL', 'https://atentidoc.onrender.com'),
+        'base_url' => env('API_BASE_URL', 'https://dev.atentidoc.com.ar'),
         'timeout' => env('API_TIMEOUT', 30),
     ],
 
