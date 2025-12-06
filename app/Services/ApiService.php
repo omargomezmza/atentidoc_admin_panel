@@ -279,31 +279,32 @@ class ApiService
 
         $login = $this->login($email, $password);
 
-        if (is_null($login['accessToken']) || !isset($login['accessToken']) || !$login['accessToken']) {
+        if (!$login['ok']) {
             return null;
         }
 
-        $api_user_id = $login['user']['id'];
+        $data = $login['data'];
+        $api_user_id = $data['user']['id'];
         User::where('api_user_id', $api_user_id)->first();
 
         $api_token = ApiToken::where('user_id', $api_user_id)->first();
         $api_token->update(
             [
                 'user_id' => $user->id, // Buscar por user_id
-                'access_token' => $login['accessToken'],
-                'refresh_token' => $login['accessToken'] ?? null,
+                'access_token' => $data['accessToken'],
+                'refresh_token' => $data['accessToken'] ?? null,
                 'expires_at' => null,
             ]
         );
         // Guardar nuevo token
         $user->update([
-            'role' => is_null($login['user']['role']) 
-                ? null : json_encode($login['user']['role']),
-            'avatar_url' => $login['user']['avatarUrl'] ?? null,
-            'status' => $login['user']['status'] ?? null,
+            'role' => is_null($data['user']['role']) 
+                ? null : json_encode($data['user']['role']),
+            'avatar_url' => $data['user']['avatarUrl'] ?? null,
+            'status' => $data['user']['status'] ?? null,
         ]);
 
-        return $login['accessToken'];
+        return $data['accessToken'];
     }
 
 

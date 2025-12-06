@@ -64,21 +64,23 @@ class AuthController extends Controller
                 $credentials['password']
             );
             
+            //dd($apiResponse);
+
             if (!$apiResponse['ok']) {
                 
-            return redirect()
-                ->back()
-                ->with([
-                    'error' => $apiResponse['message'] ?? 'La operación falló.',
-                    'details' => $apiResponse['details'] ?? [],
-                    /* 'message' => $apiResponse['details']
-                            ? $apiResponse['details']['message']
-                            : null,
-                    'field' => $apiResponse['details'] 
-                            ? $apiResponse['details']['field']
-                            : null */
-                ])
-                ->withInput();
+                return redirect()
+                    ->back()
+                    ->with([
+                        'error' => $apiResponse['message'] ?? 'La operación falló.',
+                        'details' => $apiResponse['details'] ?? [],
+                        /* 'message' => $apiResponse['details']
+                                ? $apiResponse['details']['message']
+                                : null,
+                        'field' => $apiResponse['details'] 
+                                ? $apiResponse['details']['field']
+                                : null */
+                    ])
+                    ->withInput();
             }
             // La respuesta de la API debería tener esta estructura:
             // {
@@ -96,31 +98,33 @@ class AuthController extends Controller
 
             // 3. ALMACENAR DATOS DEL USUARIO Y TOKEN
 
+            $data = $apiResponse['data'];
+
             // 3.1. Crear o actualizar usuario en BD local
-            $current_user = User::where('api_user_id', $apiResponse['user']['id'])->first();
+            $current_user = User::where('api_user_id', $data['user']['id'])->first();
             if ($current_user){
                 $current_user->update(
                     [
-                        'api_user_id' => $apiResponse['user']['id'],
-                        'email' =>  $apiResponse['user']['email'],
+                        'api_user_id' => $data['user']['id'],
+                        'email' =>  $data['user']['email'],
                         'remote_password'  => $credentials['password'], // ← IMPORTANTE
-                        'role' => is_null($apiResponse['user']['role']) 
-                            ? null : json_encode($apiResponse['user']['role']),
-                        'avatar_url' => $apiResponse['user']['avatarUrl'] ?? null,
-                        'status' => $apiResponse['user']['status'] ?? null,
+                        'role' => is_null($data['user']['role']) 
+                            ? null : json_encode($data['user']['role']),
+                        'avatar_url' => $data['user']['avatarUrl'] ?? null,
+                        'status' => $data['user']['status'] ?? null,
                     ]
                 );
             }
             else {
                 $current_user = User::create(
                     [
-                        'api_user_id' => $apiResponse['user']['id'],
-                        'email' =>  $apiResponse['user']['email'],
+                        'api_user_id' => $data['user']['id'],
+                        'email' =>  $data['user']['email'],
                         'remote_password'  => $credentials['password'], // ← IMPORTANTE
-                        'role' => is_null($apiResponse['user']['role']) 
-                            ? null : json_encode($apiResponse['user']['role']),
-                        'avatar_url' => $apiResponse['user']['avatarUrl'] ?? null,
-                        'status' => $apiResponse['user']['status'] ?? null,
+                        'role' => is_null($data['user']['role']) 
+                            ? null : json_encode($data['user']['role']),
+                        'avatar_url' => $data['user']['avatarUrl'] ?? null,
+                        'status' => $data['user']['status'] ?? null,
                     ]
                 );
             }
@@ -128,7 +132,7 @@ class AuthController extends Controller
             //Log::info('Usuario creado/actualizado', ['user_id' => $current_user->id]);
 
             // 3.2. Calcular fecha de expiración del token
-            $expiresAt = now()->addSeconds($apiResponse['expires_in'] ?? 3600);
+            $expiresAt = now()->addSeconds($data['expires_in'] ?? 3600);
 
             //dd("aqui", $apiResponse, $current_user);
             // 3.3. Guardar token en tabla api_tokens
@@ -137,8 +141,8 @@ class AuthController extends Controller
                 $api_token->update(
                     [
                         'user_id' => $current_user->id, // Buscar por user_id
-                        'access_token' => $apiResponse['accessToken'],
-                        'refresh_token' => $apiResponse['accessToken'] ?? null,
+                        'access_token' => $data['accessToken'],
+                        'refresh_token' => $data['accessToken'] ?? null,
                         'expires_at' => $expiresAt,
                     ]
                 );
@@ -147,8 +151,8 @@ class AuthController extends Controller
                 $api_token = ApiToken::create(
                     [
                         'user_id'=> $current_user->id,
-                        'access_token' => $apiResponse['accessToken'],
-                        'refresh_token' => $apiResponse['accessToken'] ?? null,
+                        'access_token' => $data['accessToken'],
+                        'refresh_token' => $data['accessToken'] ?? null,
                         'expires_at' => $expiresAt,
                     ]
                 );
