@@ -64,6 +64,7 @@ class UserController extends Controller
 
     public function store_user(Request $request)
     {
+
         $data = $request->all();
 
         // 1. Construimos el payload JSON con la estructura esperada por tu backend
@@ -123,24 +124,45 @@ class UserController extends Controller
 
             // === Caso de errores específicos (validación remota) ===
             if (!empty($apiResponse['errors'])) {
+                //dd("errors", $apiResponse);
                 return redirect()
                     ->back()
                     ->withErrors($apiResponse['errors'])
                     ->withInput()
-                    ->with('error', $apiResponse['message'] ?? 'Error en la operación');
+                    ->with([
+                        'error' => $apiResponse['message'] ?? 'Error en la operación',
+                        'details' => $apiResponse['details'] ?? [],
+                        /* 'message' => $apiResponse['details']
+                                ? $apiResponse['details']['message']
+                                : null,
+                        'field' => $apiResponse['details'] 
+                                ? $apiResponse['details']['field']
+                            : null */
+                    ]);
             }
 
+            //dd("errors 2", $apiResponse);
             // === Errores genéricos ===
             return redirect()
                 ->back()
-                ->with('error', $apiResponse['message'] ?? 'La operación falló.')
+                ->with([
+                    'error' => $apiResponse['message'] ?? 'La operación falló.',
+                    'details' => $apiResponse['details'] ?? [],
+                    /* 'message' => $apiResponse['details']
+                            ? $apiResponse['details']['message']
+                            : null,
+                    'field' => $apiResponse['details'] 
+                            ? $apiResponse['details']['field']
+                        : null */
+                ])
                 ->withInput();
         }
 
         catch (\Exception $err) {
+            //dd("CATCH", $err->getMessage());
             return redirect()->back()->with([
                 'error' => 'La operación falló. Intenelo de nuevo más tarde.',
-                'details' => 'Ocurrió un error: ' . $err->getMessage()
+                'exception' => 'Ocurrió un error: ' . $err->getMessage(),
             ])->withInput();;
         }
     }
@@ -295,23 +317,43 @@ class UserController extends Controller
 
             // === Caso de errores específicos (validación remota) ===
             if (!empty($apiResponse['errors'])) {
+
+                //dd("errors", $apiResponse);
                 return redirect()
                     ->back()
                     ->withErrors($apiResponse['errors'])
                     ->withInput()
-                    ->with('error', $apiResponse['message'] ?? 'Error en la operación');
+                    ->with([
+                        'error' => $apiResponse['message'] ?? 'La operación falló.',
+                        'details' => $apiResponse['details'] ?? [],
+                        /* 'message' => $apiResponse['details']
+                                ? $apiResponse['details']['message']
+                                : null,
+                        'field' => $apiResponse['details'] 
+                                ? $apiResponse['details']['field']
+                            : null */
+                    ]);
             }
 
             // === Errores genéricos ===
             return redirect()
                 ->back()
-                ->with('error', $apiResponse['message'] ?? 'La operación falló.')
+                ->with([
+                    'error' => $apiResponse['message'] ?? 'La operación falló.',
+                    'details' => $apiResponse['details'] ?? [],
+                    /* 'message' => $apiResponse['details']
+                            ? $apiResponse['details']['message']
+                            : null,
+                    'field' => $apiResponse['details'] 
+                            ? $apiResponse['details']['field']
+                            : null */
+                ])
                 ->withInput();
         }
         catch (\Exception  $err) {
             return redirect()->back()->with([
                 'error' => 'La operación falló. Intenelo de nuevo más tarde.',
-                'details' => 'Ocurrió un error: ' . $err->getMessage()
+                'exception' => 'Ocurrió un error: ' . $err->getMessage()
             ])->withInput();
 
         }

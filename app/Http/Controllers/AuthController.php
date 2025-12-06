@@ -57,11 +57,29 @@ class AuthController extends Controller
 
             // 2. ENVIAR CREDENCIALES A LA API
             //Log::info('Intentando login', ['email' => $credentials['email']]);
-            
+
+           
             $apiResponse = $this->apiService->login(
                 $credentials['email'],
                 $credentials['password']
             );
+            
+            if (!$apiResponse['ok']) {
+                
+            return redirect()
+                ->back()
+                ->with([
+                    'error' => $apiResponse['message'] ?? 'La operación falló.',
+                    'details' => $apiResponse['details'] ?? [],
+                    /* 'message' => $apiResponse['details']
+                            ? $apiResponse['details']['message']
+                            : null,
+                    'field' => $apiResponse['details'] 
+                            ? $apiResponse['details']['field']
+                            : null */
+                ])
+                ->withInput();
+            }
             // La respuesta de la API debería tener esta estructura:
             // {
             //     "access_token": "eyJ0eXAiOiJKV1QiLCJhbGc...",
@@ -157,7 +175,7 @@ class AuthController extends Controller
             return redirect()->intended(route('admin.dashboard'))
                 ->with('success', '¡Bienvenido, ' . $current_user->email . '!');
 
-        } catch (\Exception $e) {
+        } catch (\Exception $err) {
             // Revertir transacción en caso de error
             DB::rollBack();
 
@@ -174,6 +192,7 @@ class AuthController extends Controller
                 ->withInput($request->only('email'))
                 ->withErrors([
                     'email' => 'Las credenciales proporcionadas son incorrectas.',
+                    'exception' => $err->getMessage()
                 ]);
         }
     }

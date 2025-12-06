@@ -20,6 +20,9 @@
             :type="showPassword ? 'text' : '{{ $type }}'"
             id="{{ $name }}"
             name="{{ $name }}"
+            @if ($name === 'email')
+                value="{{ old('email') }}"
+            @endif
             placeholder="{{ $placeholder }}"
             {{ $required ? 'required' : '' }}
             {{ $attributes->merge(['class' => 'w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-700 placeholder-gray-400']) }}

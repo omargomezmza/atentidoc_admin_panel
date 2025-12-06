@@ -54,11 +54,23 @@ class ApiService
                     'body' => $response->body(),
                 ]); */
 
-                throw new \Exception('Credenciales inválidas', $response->status());
+                return [
+                    'ok' => false,
+                    'details' => $response->json('details') ?? null,
+                    'status' => $response->status(),
+                    'message' =>  $response->json('message') ?? 'Error de autenticación en la API',
+                    'errors' => []
+                ];
+                //throw new \Exception('Credenciales inválidas', $response->status());
             }
 
             $data = $response->json();
-            
+
+            return [
+                'ok' => true,
+                'status' => $response->status(),
+                'data' => $data
+            ];
             //dd('chau 2', $data);
             // Validar que la respuesta tenga los datos necesarios
             if (!isset($data['accessToken']) || !isset($data['user'])) {
@@ -181,6 +193,7 @@ class ApiService
                     if ($response->failed()) {
                         return [
                             'ok' => false,
+                            'details' => $response->json('details') ?? null,
                             'status' => $response->status(),
                             'message' => 'La API rechazó la autenticación aun tras refrescar token.',
                             'errors' => $response->json('errors') ?? []
@@ -191,6 +204,7 @@ class ApiService
                 // Manejo de errores genéricos de la API
                 return [
                     'ok' => false,
+                    'details' => $response->json('details') ?? null,
                     'status' => $response->status(),
                     'message' => $response->json('message') ?? 'Error en la petición a la API',
                     'errors' => $response->json('errors') ?? []
@@ -201,6 +215,7 @@ class ApiService
             if ($response->status() === 204) {
                 return [
                     'ok' => true,
+                    'details' => $response->json('details') ?? null,
                     'status' => 204,
                     'data' => []
                 ];

@@ -115,7 +115,55 @@
             
         </div>
     </div>
-    
+
+    @if(session('error'))
+        <x-modal show="true" name="error-modal" title="Ocurrió un error" size="md">
+            <div class="space-y-4">
+                <h2> 
+                    Revisa los errores y vuelve a intentarlo.
+                </h2>
+
+                @if (session('exception'))
+
+                    <p>
+                        <i>
+                            {{ session('exception') }}
+                        </i>
+                    </p>
+                @else
+
+                    <p>
+                        <b>
+                            {{ session('error') }}
+                        </b>
+                    </p>
+                    @foreach (session('details') as $detail)
+                        <p>
+                            <b>
+                                {{ $detail['field'] }}:
+                            </b>
+                            <i>
+                                {{ $detail['message'] }}
+                            </i>
+                        </p>
+                    @endforeach
+                    
+                @endif
+
+            </div>
+
+            <x-slot:footer>
+                <div class="flex justify-end space-x-3">                        
+                    <button type="button" @click="$dispatch('close-modal', { name: 'error-modal' })"  
+                        type="button" class="px-4 py-2 bg-red-600 text-white rounded-lg 
+                        hover:bg-red-700 transition-colors">
+                        OK
+                    </button>
+                </div>
+            </x-slot:footer>
+        </x-modal>
+    @endif
+
 </body>
 </html>
 

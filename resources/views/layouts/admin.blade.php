@@ -45,6 +45,7 @@
                     <h2> 
                         ¡El proceso fue exitoso!
                     </h2>
+
                 </div>
 
                 <x-slot:footer>
@@ -67,6 +68,32 @@
                     <h2> 
                         Revisa los errores y vuelve a intentarlo.
                     </h2>
+
+                    @if (session('exception'))
+
+                        <p>
+                            <i>
+                                {{ session('exception') }}
+                            </i>
+                        </p>
+                    @else
+
+                        <p>
+                            {{ session('error') }}
+                        </p>
+                        @foreach (session('details') as $detail)
+                            <p>
+                                <b>
+                                    {{ $detail['field'] }}:
+                                </b>
+                                <i>
+                                    {{ $detail['message'] }}
+                                </i>
+                            </p>
+                        @endforeach
+                        
+                    @endif
+
                 </div>
 
                 <x-slot:footer>
