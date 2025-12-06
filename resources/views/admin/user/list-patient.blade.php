@@ -7,18 +7,20 @@
     'in_process':null,
     async deleting() {
         const URI = '{{ route("admin.delete.user") }}/' + this.in_process;
-        console.log('DELETING', URI);
         try {
             const res = await axios.delete(URI);
-            console.log(res.data);
+            console.log('data server', res.data);
             
             if (res.data.status === 'OK') {
-                alert('El usuario fue eliminado exitosamente.');
+                alert('El usuario fue eliminado con éxito.');
+                window.location.reload();
+            }
+            else if (res.data.msg) {
+                alert('Ocurrió un error:  [ ' + res.data.msg + ' ]');
             }
             else {
                 alert('Ocurrió un error durante el proceso de eliminación de usuario. Intentelo de nuevo más tarde.');
             }
-            window.location.reload();
         }
         catch (e) {
             alert('Ocurrió un error durante el proceso de eliminación de usuario. Intentelo de nuevo más tarde.');

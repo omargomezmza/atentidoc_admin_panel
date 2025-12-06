@@ -367,7 +367,15 @@ class UserController extends Controller
             $apiResponse = $this->apiService->makeAuthenticatedRequest(
                     'delete', $endpoint
                 );
-            return ['status' => 'OK'];
+            if ($apiResponse['ok']) {
+                return ['status' => 'OK'];
+            }
+            else {
+                return [
+                    'status' => 'KO',
+                    'msg' => $apiResponse['message']
+                ];
+            }
         }
         catch (\Exception $err) {
             return ['status' => 'KO'];
