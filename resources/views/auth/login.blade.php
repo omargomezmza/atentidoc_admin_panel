@@ -7,7 +7,7 @@
     <link rel="icon" href="Logo_Tran.png" type="image/png">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 flex items-center justify-center p-4">
+<body x-data="{'isLoading': false}" class="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 flex items-center justify-center p-4">
     
     <div class="w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden">
         <div class="flex flex-col md:flex-row min-h-[600px]">
@@ -66,7 +66,8 @@
                     
                     <h2 class="text-3xl font-bold text-gray-800 mb-8">Iniciar Sesión</h2>
                     
-                    <form action="{{ route('login') }}" method="POST" class="space-y-5">
+                    <form action="{{ route('login') }}" method="POST" class="space-y-5" 
+                        x-on:submit="isLoading = true">
                         @csrf
                         
                         <!-- Email Input -->
@@ -164,6 +165,8 @@
         </x-modal>
     @endif
 
+    <x-loading />
+    <x-script-refresh-token />
 </body>
 </html>
 

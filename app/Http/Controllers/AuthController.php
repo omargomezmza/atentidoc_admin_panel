@@ -176,8 +176,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             // Redireccionar al dashboard
-            return redirect()->intended(route('admin.dashboard'))
-                ->with('success', '¡Bienvenido, ' . $current_user->email . '!');
+            return redirect()->intended(route('admin.dashboard'));
 
         } catch (\Exception $err) {
             // Revertir transacción en caso de error
@@ -193,11 +192,10 @@ class AuthController extends Controller
 
             // Mensaje genérico para el usuario (no revelar detalles de seguridad)
             return back()
-                ->withInput($request->only('email'))
-                ->withErrors([
-                    'email' => 'Las credenciales proporcionadas son incorrectas.',
+                ->with([
+                    'error' => 'Las credenciales proporcionadas son incorrectas.',
                     'exception' => $err->getMessage()
-                ]);
+                ])->withInput();
         }
     }
 

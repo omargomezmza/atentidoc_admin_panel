@@ -167,6 +167,7 @@
 
 <div 
     x-data="{
+        isLoading: false,
         @foreach($alpineData as $key => $value)
             {{ $key }}: {{ $value }},
         @endforeach
@@ -190,12 +191,11 @@
     @endif
 
     <!-- Formulario -->
-    <form 
-        action="{{ $action }}" 
+    <form x-on:submit="isLoading = true" action="{{ $action }}" 
         method="{{ $formMethod }}"
         @if($enctype) enctype="{{ $enctype }}" @endif
-        class="p-6"
-    >
+        class="p-6">
+        
         @csrf
         
         @if($needsMethodField)
@@ -220,7 +220,7 @@
             @endif
 
             @if (!$disabled)
-                <button
+                <button                    
                     type="submit"
                     class="px-6 py-3 {{ $submitColorClass }} text-white font-medium rounded-lg transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-md hover:shadow-lg"
                 >
@@ -229,4 +229,7 @@
             @endif
         </div>
     </form>
+
+    <x-loading />
+    <x-script-refresh-token />
 </div>

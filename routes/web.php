@@ -12,6 +12,10 @@ Route::get("/hola", fn () => "Hola");
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'showLoginForm'])->name('login.show');
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
 
+Route::get('/refresh-csrf', function () {
+    return ['token' => csrf_token()];
+});
+
 // Rutas protegidas
 Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
