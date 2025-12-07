@@ -7,24 +7,17 @@
     <link rel="icon" href="{{ asset('Logo_Tran.png') }}" type="image/png">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-50 min-h-screen" x-data="{'isLoading': false}">
     
-    {{-- Alpine data global para sidebar y loading --}}
-    <div x-data="{ 
-        sidebarOpen: window.innerWidth >= 1024, 
-        isLoading: false 
-    }" class="flex h-screen overflow-hidden">
+    <div class="flex h-screen overflow-hidden" x-data="{ sidebarOpen: false }">
         
         <!-- Sidebar -->
         <x-admin.sidebar />
         
         <!-- Main Content Area -->
-        <div 
-            class="flex-1 flex flex-col overflow-hidden transition-all duration-300"
-            :class="sidebarOpen ? 'lg:ml-0' : 'lg:ml-0'"
-        >
+        <div class="flex-1 flex flex-col overflow-hidden">
             
-            <!-- Top Header (solo para mobile) -->
+            <!-- Top Header (optional, for mobile menu toggle) -->
             <header class="bg-white border-b border-gray-200 lg:hidden">
                 <div class="px-4 py-3 flex items-center justify-between">
                     <h1 class="text-xl font-bold text-gray-800">AtentiDoc</h1>
@@ -43,17 +36,24 @@
             
         </div>
         
-        {{-- Modales de éxito/error --}}
+    </div>
+    
+
         @if(session('success'))
             <x-modal show="true" name="init-success-modal" title="Proceso exitoso" size="md">
                 <div class="space-y-4">
-                    <h2>¡El proceso fue exitoso!</h2>
+                    <h2> 
+                        ¡El proceso fue exitoso!
+                    </h2>
+
                 </div>
 
                 <x-slot:footer>
                     <div class="flex justify-end space-x-3">
+                        
                         <button type="button" @click="$dispatch('close-modal', { name: 'init-success-modal' })" 
-                            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                             class="px-4 py-2 bg-green-600 text-white rounded-lg 
+                            hover:bg-green-700 transition-colors">
                             OK
                         </button>
                     </div>
@@ -64,31 +64,48 @@
         @if(session('error'))
             <x-modal show="true" name="init-error-modal" title="Ocurrió un error" size="md">
                 <div class="space-y-4">
-                    <h2>Revisa los errores y vuelve a intentarlo.</h2>
+                    <h2> 
+                        Revisa los errores y vuelve a intentarlo.
+                    </h2>
 
                     @if (session('exception'))
-                        <p><i>{{ session('exception') }}</i></p>
+
+                        <p>
+                            <i>
+                                {{ session('exception') }}
+                            </i>
+                        </p>
                     @else
-                        <p>{{ session('error') }}</p>
+
+                        <p>
+                            {{ session('error') }}
+                        </p>
 
                         @php
                             $details = session('details');
                         @endphp
-                        @if (isset($details) && !empty($details)) 
+                        @if (isset($details) && !empy($details)) 
                             @foreach (session('details') as $detail)
                                 <p>
-                                    <b>{{ $detail['field'] }}:</b>
-                                    <i>{{ $detail['message'] }}</i>
+                                    <b>
+                                        {{ $detail['field'] }}:
+                                    </b>
+                                    <i>
+                                        {{ $detail['message'] }}
+                                    </i>
                                 </p>
                             @endforeach    
                         @endif
+                        
                     @endif
+
                 </div>
 
                 <x-slot:footer>
                     <div class="flex justify-end space-x-3">                        
                         <button type="button" @click="$dispatch('close-modal', { name: 'init-error-modal' })"  
-                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                            type="button" class="px-4 py-2 bg-red-600 text-white rounded-lg 
+                            hover:bg-red-700 transition-colors">
                             OK
                         </button>
                     </div>
@@ -98,13 +115,18 @@
 
         <x-modal name="success-modal" title="Proceso exitoso" size="md">
             <div class="space-y-4">
-                <h2>¡El proceso fue exitoso!</h2>
+                <h2> 
+                    ¡El proceso fue exitoso!
+                </h2>
+
             </div>
 
             <x-slot:footer>
                 <div class="flex justify-end space-x-3">
+                    
                     <button type="button" @click="$dispatch('close-modal', { name: 'success-modal' })" 
-                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                            class="px-4 py-2 bg-green-600 text-white rounded-lg 
+                        hover:bg-green-700 transition-colors">
                         OK
                     </button>
                 </div>
@@ -113,13 +135,16 @@
 
         <x-modal name="error-modal" title="Ocurrió un error" size="md">
             <div class="space-y-4">
-                <h2>Por favor, intentalo de nuevo más tarde.</h2>
+                <h2> 
+                    Por favor, intentalo de nuevo más tarde.
+                </h2>
             </div>
 
             <x-slot:footer>
                 <div class="flex justify-end space-x-3">                        
                     <button type="button" @click="$dispatch('close-modal', { name: 'error-modal' })"  
-                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        type="button" class="px-4 py-2 bg-red-600 text-white rounded-lg 
+                        hover:bg-red-700 transition-colors">
                         OK
                     </button>
                 </div>
@@ -127,8 +152,6 @@
         </x-modal>
 
         <x-loading />
-    </div>
-
     @stack('scripts')
 </body>
 </html>

@@ -1,6 +1,6 @@
 @props(['currentRoute' => ''])
 
-<!-- Overlay for mobile con efecto blur -->
+<!-- Overlay for mobile -->
 <div 
     x-show="sidebarOpen" 
     @click="sidebarOpen = false"
@@ -10,16 +10,16 @@
     x-transition:leave="transition-opacity ease-linear duration-300"
     x-transition:leave-start="opacity-100"
     x-transition:leave-end="opacity-0"
-    class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-20 lg:hidden"
+    class="fixed inset-0 bg-black bg-opacity-90 z-20 lg:hidden"
     style="display: none;"
 ></div>
 
 <!-- Sidebar -->
 <aside 
-    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:-translate-x-64'"
-    class="fixed lg:static inset-y-0 left-0 z-30 w-72 bg-gradient-to-b from-teal-500 to-emerald-600 text-white transform transition-transform duration-300 ease-in-out flex flex-col"
-    x-cloak
->
+    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+    class="fixed lg:static inset-y-0 left-0 z-30 w-72 bg-gradient-to-b from-teal-500 to-emerald-600 text-white transform transition-transform duration-300 ease-in-out lg:translate-x-0 flex flex-col"
+    x-cloak>
+
     <!-- User Profile Section -->
     <div class="p-6 border-b border-white/20">
         <div class="flex flex-col items-center">
@@ -35,7 +35,7 @@
 
             <form class="mt-5" action="{{ route('logout') }}" method="post">
                 @csrf
-                <button class="cursor-pointer hover:text-white/80 transition-colors">
+                <button class="cursor-pointer">
                     Cerrar Sesión
                 </button>
             </form>
@@ -51,21 +51,21 @@
                 icon="professionals"
                 label="Profesionales"
                 :hasSubmenu="true"
-                route="#"
+                route="#{{-- admin.professionals --}}"
             />
             
             <x-admin.menu-item 
                 icon="patients"
                 label="Pacientes"
                 :hasSubmenu="true"
-                route="#"
+                route="#{{-- admin.patients --}}"
             />
             
             <x-admin.menu-item 
                 icon=""
                 label="Recursos"
                 :hasSubmenu="true"
-                route="#"
+                route="#{{-- admin.users --}}"
             >
                 <x-admin.menu-item 
                     icon="users"
@@ -95,39 +95,19 @@
     <div class="p-6 border-t border-white/20">
         <div class="flex flex-col items-center">
             <img src="{{ asset('Logo_Blanco.png') }}" alt="Logo de AtentiDoc" class="w-12 h-12 mb-2">
+            {{-- <svg class="w-12 h-12 mb-2" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M100 140C100 140 85 155 70 155C55 155 45 145 45 130C45 115 55 105 70 105C85 105 100 120 100 120" 
+                      stroke="white" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+                <path d="M100 140C100 140 115 155 130 155C145 155 155 145 155 130C155 115 145 105 130 105C115 105 100 120 100 120" 
+                      stroke="white" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+                <circle cx="100" cy="85" r="12" fill="white" opacity="0.9"/>
+                <line x1="100" y1="97" x2="100" y2="120" stroke="white" stroke-width="6" opacity="0.9"/>
+                <path d="M100 65 L95 55 C90 45 75 40 65 50 C55 60 60 75 70 85 L100 110 L130 85 C140 75 145 60 135 50 C125 40 110 45 105 55 Z" 
+                      fill="#EF4444"/>
+            </svg> --}}
             <h3 class="text-lg font-bold text-white">AtentiDoc</h3>
             <p class="text-xs text-teal-100">Siempre listos para cuidarte</p>
         </div>
     </div>
-</aside>
-
-<!-- Toggle Button (visible cuando sidebar está cerrado en desktop) -->
-<button
-    @click="sidebarOpen = !sidebarOpen"
-    :class="sidebarOpen ? 'lg:hidden' : ''"
-    class="fixed bottom-8 left-4 lg:left-6 z-40 p-4 bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-full shadow-2xl hover:shadow-teal-500/50 transition-all duration-300 hover:scale-110 group"
-    :title="sidebarOpen ? 'Cerrar menú' : 'Abrir menú'"
->
-    <!-- Icono de hamburguesa cuando está cerrado -->
-    <svg 
-        x-show="!sidebarOpen" 
-        class="w-6 h-6 transition-transform group-hover:rotate-90 duration-300" 
-        fill="none" 
-        stroke="currentColor" 
-        viewBox="0 0 24 24"
-        style="display: none;"
-    >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-    </svg>
     
-    <!-- Icono de cerrar cuando está abierto (solo mobile) -->
-    <svg 
-        x-show="sidebarOpen" 
-        class="w-6 h-6 lg:hidden transition-transform group-hover:rotate-90 duration-300" 
-        fill="none" 
-        stroke="currentColor" 
-        viewBox="0 0 24 24"
-    >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-    </svg>
-</button>
+</aside>

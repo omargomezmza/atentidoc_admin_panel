@@ -18,7 +18,7 @@
     }
 @endphp
 
-<div class="text-sm">
+<div class="text-sm" style="text-align: center;">
     <div class="text-gray-900">{{ $formatted }}</div>
     @if($showRelative && $relative)
         <div class="text-xs text-gray-500">{{ $relative }}</div>

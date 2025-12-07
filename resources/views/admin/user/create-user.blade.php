@@ -107,6 +107,12 @@
                     isPatient = selectedValues.includes(\'PATIENT\');
                     console.log(\'Roles:\', {isAdmin, isProfessional, isPatient});
                 ',
+                'x-init' =>  '
+                    isAdmin = selectedValues.includes(\'ADMIN\'); 
+                    isProfessional = selectedValues.includes(\'DOCTOR\'); 
+                    isPatient = selectedValues.includes(\'PATIENT\');
+                    console.log(\'Roles:\', {isAdmin, isProfessional, isPatient});
+                ', 
             ],
             [
                 'type' => 'group',

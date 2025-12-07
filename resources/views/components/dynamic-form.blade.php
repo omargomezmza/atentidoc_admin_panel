@@ -167,7 +167,6 @@
 
 <div 
     x-data="{
-        isLoading: false,
         @foreach($alpineData as $key => $value)
             {{ $key }}: {{ $value }},
         @endforeach
@@ -204,7 +203,7 @@
 
         <div class="space-y-6">
             @foreach($fields as $field)
-                <x-dynamic-form-field :field="$field" :disabled="$disabled" />
+                    <x-dynamic-form-field :field="$field" :disabled="$disabled" />
             @endforeach
         </div>
 
@@ -230,6 +229,5 @@
         </div>
     </form>
 
-    <x-loading />
     <x-script-refresh-token />
 </div>

@@ -9,21 +9,31 @@
         const URI = '{{ route("admin.delete.user") }}/' + this.in_process;
         console.log('DELETING', URI);
         try {
+            this.isLoading = true;
             const res = await axios.delete(URI);
             console.log('data server', res.data);
             if (res.data.status === 'OK') {
-                alert('El usuario fue eliminado con éxito.');
+                //this.isLoading = false;
+                //alert('El usuario fue eliminado con éxito.');
                 window.location.reload();
             }
             else if (res.data.msg) {
-                alert('Ocurrió un error:  [ ' + res.data.msg + ' ]');
+                this.isLoading = false;
+                //alert('Ocurrió un error:  [ ' + res.data.msg + ' ]');
+                $dispatch('open-modal', { name: 'error-modal' }); 
+                
             }
             else {
-                alert('Ocurrió un error durante el proceso de eliminación de usuario. Intentelo de nuevo más tarde.');
+                this.isLoading = false;
+                //alert('Ocurrió un error durante el proceso de eliminación de usuario. Intentelo de nuevo más tarde.');
+                $dispatch('open-modal', { name: 'error-modal' }); 
+
             }
         }
         catch (e) {
-            alert('Ocurrió un error durante el proceso de eliminación de usuario. Intentelo de nuevo más tarde.');
+            this.isLoading = false;
+            $dispatch('open-modal', { name: 'error-modal' }); 
+            //alert('Ocurrió un error durante el proceso de eliminación de usuario. Intentelo de nuevo más tarde.');
             console.log('ERROR: ', e);
         }
     }
@@ -35,19 +45,17 @@
         <p class="text-gray-600">Puede leer, actualizar y eliminar esta información</p>
     </div>
     
-    <!-- Search Box -->
-    <div class="mb-8">
-        <x-admin.search-box placeholder="Buscar en el panel..." />
+    <div class="flex items-center gap-4 mb-8">
+        <!-- Search Box (ocupa todo el espacio posible) -->
+        <div class="flex-1">
+            <x-admin.search-box placeholder="Buscar en el panel..." />
+        </div>
+
+        <!-- Create Button -->
+        <x-link-button />
     </div>
 
-    {{-- Botón de Creación --}}
-    <a class="px-6 py-3 bg-green-200 text-gray-700 font-medium rounded-lg hover:bg-green-300 
-        transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 
-        focus:ring-green-500"
-        href="{{ route('admin.create.user') }}">
-        Crear Usuario
-    </a>
-
+    
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         
@@ -94,7 +102,7 @@
     
 
     @php
-        $content = array_map(fn ($el) => (object) $el, $list['content']); 
+        $content = is_null($list) ? [] : array_map(fn ($el) => (object) $el, $list['content']); 
         //dd($list, $content);
     @endphp
     <x-admin.table 
@@ -104,15 +112,35 @@
                 'field' => 'id',
             ],
             [
-                'label' => 'Nombre',
-                'field' => 'firstName',
-                'component' => 'admin.table-avatar',
-                'nameField' => 'firstName',
-                'subtitleField' => 'lastName',
-            ],
-            [
                 'label' => 'Email',
                 'field' => 'email',
+            ],
+            [
+                'label' => 'Roles',
+                'field' => 'role',
+                'render' => fn ($field) => implode(' | ', array_map(
+                        function ($role) { 
+                            if ($role === 'PATIENT') {
+                                return 'Paciente'; 
+                            }
+                            else if ($role === 'DOCTOR') {
+                                return 'Doctor';
+                            } 
+                            else if ($role === 'ADMIN') {
+                                return 'Admin';
+                            } 
+                            else {
+                                return $role;
+                            }
+                        }, $field->role)
+                    ),
+                
+            ],
+            [
+                'label' => 'Fecha de Nacimiento',
+                'field' => 'birthDate',
+                'component' => 'admin.table-date',
+                'format' => 'd/m/Y',
             ],
             [
                 'label' => 'Estado',
@@ -127,23 +155,6 @@
                     'pending' => 'Pendiente',
                     'ACTIVE' => 'Aprobado',
                     'rejected' => 'Rechazado',
-                ],
-            ],
-            [
-                'label' => 'Fecha de Nacimiento',
-                'field' => 'birthDate',
-                'component' => 'admin.table-date',
-                'format' => 'd/m/Y',
-            ],
-            [
-                'label' => 'Género',
-                'field' => 'gender',
-                'component' => 'admin.table-badge',
-                'labelMap' => [
-                    'MALE' => 'Hombre',
-                    'FEMALE' => 'Mujer',
-                    'OTHER' => 'Otro',
-                    null => '--',
                 ],
             ],
             [

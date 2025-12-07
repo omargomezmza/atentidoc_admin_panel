@@ -10,10 +10,10 @@
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
             <!-- Header -->
-            <thead class="bg-gradient-to-r from-teal-50 to-emerald-50">
+            <thead class="bg-gradient-to-r from-teal-50 to-emerald-50" style="background-color:#4B4B4B">
                 <tr>
                     @foreach($columns as $column)
-                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider {{ $column['headerClass'] ?? '' }}">
+                        <th scope="col" style="background-color:#4B4B4B; text-align: center;" class="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider {{ $column['headerClass'] ?? '' }}">
                             {{ $column['label'] }}
                         </th>
                     @endforeach

@@ -22,7 +22,14 @@ class UserController extends Controller
             );
         //dd($apiResponse);
         if ($apiResponse['ok']) {
-            return view('admin.user.list-doctor', ['list' => $apiResponse['data']]);
+            return view('admin.user.list-admin', ['list' => $apiResponse['data']]);
+        }
+
+        else {
+            return view('admin.user.list-admin', ['list' => null])->with([
+                'error' => $apiResponse['message'] ?? 'La operación falló.',
+                'details' => $apiResponse['details'] ?? []
+            ]);
         }
     }
 
@@ -34,7 +41,13 @@ class UserController extends Controller
             );
         //dd($apiResponse);
         if ($apiResponse['ok']) {
-            return view('admin.user.list-doctor', ['list' => $apiResponse['data']]);
+            return view('admin.user.list-patient', ['list' => $apiResponse['data']]);
+        }
+        else {
+            return view('admin.user.list-patient', ['list' => null])->with([
+                'error' => $apiResponse['message'] ?? 'La operación falló.',
+                'details' => $apiResponse['details'] ?? []
+            ]);
         }
     }
 
@@ -47,6 +60,12 @@ class UserController extends Controller
         //dd($apiResponse);
         if ($apiResponse['ok']) {
             return view('admin.user.list-doctor', ['list' => $apiResponse['data']]);
+        }
+        else {
+            return view('admin.user.list-doctor', ['list' => null])->with([
+                'error' => $apiResponse['message'] ?? 'La operación falló.',
+                'details' => $apiResponse['details'] ?? []
+            ]);
         }
     }
 
@@ -83,9 +102,11 @@ class UserController extends Controller
             'gender'           => $data['gender'] ?? null,
             'latitude'         => $data['latitude'] ?? null,
             'longitude'        => $data['longitude'] ?? null,
+        ];
 
-            // DOCTOR FIELDS
-            'doctor' => [
+        
+        // DOCTOR FIELDS
+        $doctor = [
                 'licenseNumber'     => $data['licenseNumber'] ?? null,
                 'specialties'       => $data['specialties'] ?? [],
                 'address'           => $data['address'] ?? null,
@@ -98,15 +119,23 @@ class UserController extends Controller
                 'patientsCount'     => $data['patientsCount'] ?? 0,
                 'ratingsCount'      => $data['ratingsCount'] ?? 0,
                 'ratingsSum'        => $data['ratingsSum'] ?? 0,
-            ],
-
-            // PATIENT FIELDS
-            'patient' => [
-                'insurance'       => $data['insurance'] ?? null,
-                'affiliateNumber' => $data['affiliateNumber'] ?? null,
-            ],
         ];
+        // incluir campo 'doctor'
+        if (in_array('DOCTOR', $payload['role'])) {
+            $payload['doctor'] = $doctor;
+        }
 
+        // PATIENT FIELDS
+        $patient = [
+            'insurance'       => $data['insurance'] ?? null,
+            'affiliateNumber' => $data['affiliateNumber'] ?? null,
+        ];
+        // incluir campo 'patient'
+        if (in_array('PATIENT',$payload['role'])) {
+            $payload['patient'] = $patient;
+        }
+
+        //dd($data, $payload);
         // 2. Hacemos la llamada a la API enviando JSON correctamente formateado
         $endpoint = "api/admin/create/user";
 
@@ -368,6 +397,7 @@ class UserController extends Controller
                     'delete', $endpoint
                 );
             if ($apiResponse['ok']) {
+                session()->flash('success', 'El usuario fue eliminado correctamente.');
                 return ['status' => 'OK'];
             }
             else {
