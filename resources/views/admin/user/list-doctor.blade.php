@@ -169,6 +169,8 @@
             ],
         ]"
         :data="$content"
+        :emptyMessage="$error ?? null"
+        :error="isset($error) && !is_null($error)"
     />
 
     <!-- Botón para abrir -->

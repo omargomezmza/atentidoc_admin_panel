@@ -26,10 +26,10 @@ class UserController extends Controller
         }
 
         else {
-            return view('admin.user.list-admin', ['list' => null])->with([
-                'error' => $apiResponse['message'] ?? 'La operación falló.',
-                'details' => $apiResponse['details'] ?? []
-            ]);
+            return view('admin.user.list-admin', [
+                    'list' => null, 
+                    'error' => $apiResponse['message'] ?? 'La operación falló.',
+                ]);
         }
     }
 
@@ -44,10 +44,10 @@ class UserController extends Controller
             return view('admin.user.list-patient', ['list' => $apiResponse['data']]);
         }
         else {
-            return view('admin.user.list-patient', ['list' => null])->with([
-                'error' => $apiResponse['message'] ?? 'La operación falló.',
-                'details' => $apiResponse['details'] ?? []
-            ]);
+            return view('admin.user.list-patient', [
+                    'list' => null, 
+                    'error' => $apiResponse['message'] ?? 'La operación falló.',
+                ]);
         }
     }
 
@@ -62,10 +62,10 @@ class UserController extends Controller
             return view('admin.user.list-doctor', ['list' => $apiResponse['data']]);
         }
         else {
-            return view('admin.user.list-doctor', ['list' => null])->with([
-                'error' => $apiResponse['message'] ?? 'La operación falló.',
-                'details' => $apiResponse['details'] ?? []
-            ]);
+            return view('admin.user.list-doctor', [
+                    'list' => null, 
+                    'error' => $apiResponse['message'] ?? 'La operación falló.',
+                ]);
         }
     }
 
