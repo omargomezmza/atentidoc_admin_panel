@@ -25,7 +25,7 @@
         >
             
             <!-- Top Header (solo para mobile) -->
-            <header class="bg-white border-b border-gray-200 lg:hidden">
+            {{-- <header class="bg-white border-b border-gray-200 lg:hidden">
                 <div class="px-4 py-3 flex items-center justify-between">
                     <h1 class="text-xl font-bold text-gray-800">AtentiDoc</h1>
                     <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-lg hover:bg-gray-100">
@@ -34,7 +34,7 @@
                         </svg>
                     </button>
                 </div>
-            </header>
+            </header> --}}
             
             <!-- Page Content -->
             <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">

@@ -104,7 +104,7 @@
 <!-- Toggle Button (visible cuando sidebar está cerrado en desktop) -->
 <button
     @click="sidebarOpen = !sidebarOpen"
-    :class="sidebarOpen ? 'lg:hidden' : ''"
+    {{-- :class="sidebarOpen ? 'lg:hidden' : ''" --}}
     class="fixed bottom-8 left-4 lg:left-6 z-40 p-4 bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-full shadow-2xl hover:shadow-teal-500/50 transition-all duration-300 hover:scale-110 group"
     :title="sidebarOpen ? 'Cerrar menú' : 'Abrir menú'"
 >
@@ -123,7 +123,7 @@
     <!-- Icono de cerrar cuando está abierto (solo mobile) -->
     <svg 
         x-show="sidebarOpen" 
-        class="w-6 h-6 lg:hidden transition-transform group-hover:rotate-90 duration-300" 
+        class="w-6 h-6 {{-- lg:hidden --}} transition-transform group-hover:rotate-90 duration-300" 
         fill="none" 
         stroke="currentColor" 
         viewBox="0 0 24 24"
