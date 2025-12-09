@@ -308,10 +308,13 @@ class UserController extends Controller
             'birthDate'     => $data['birthDate'] ?? null,
             'gender'        => $data['gender'] ?? null,
             'latitude'      => $data['latitude'] ?? null,
-            'longitude'     => $data['longitude'] ?? null,
+            'longitude'     => $data['longitude'] ?? null
+        ];
 
-            'doctor' => [
+        // DOCTOR FIELDS
+        $doctor = [
                 'licenseNumber'     => $data['licenseNumber'] ?? null,
+                'specialties'       => $data['specialties'] ?? [],
                 'address'           => $data['address'] ?? null,
                 'bio'               => $data['bio'] ?? null,
                 'experienceYear'    => $data['experienceYear'] ?? null,
@@ -319,16 +322,25 @@ class UserController extends Controller
                 'consultationPrice' => $data['consultationPrice'] ?? null,
                 'cbu'               => $data['cbu'] ?? null,
                 'bank'              => $data['bank'] ?? null,
-                'patientsCount'     => $data['patientsCount'] ?? null,
-                'ratingsCount'      => $data['ratingsCount'] ?? null,
-                'ratingsSum'        => $data['ratingsSum'] ?? null,
-            ],
-
-            'patient' => [
-                'insurance'       => $data['insurance'] ?? null,
-                'affiliateNumber' => $data['affiliateNumber'] ?? null,
-            ],
+                'patientsCount'     => $data['patientsCount'] ?? 0,
+                'ratingsCount'      => $data['ratingsCount'] ?? 0,
+                'ratingsSum'        => $data['ratingsSum'] ?? 0,
         ];
+
+        // incluir campo 'doctor'
+        if (in_array('DOCTOR', $payload['role'])) {
+            $payload['doctor'] = $doctor;
+        }
+
+        // PATIENT FIELDS
+        $patient = [
+            'insurance'       => $data['insurance'] ?? null,
+            'affiliateNumber' => $data['affiliateNumber'] ?? null,
+        ];
+        // incluir campo 'patient'
+        if (in_array('PATIENT',$payload['role'])) {
+            $payload['patient'] = $patient;
+        }
 
         $endpoint = "api/admin/update/user/" . $user_id;
 
