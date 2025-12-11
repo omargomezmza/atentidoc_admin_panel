@@ -1,59 +1,237 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# AtentiDoc Panel Web
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Panel de administración web desarrollado con Laravel para la gestión de la aplicación móvil de AtentiDoc.
 
-## About Laravel
+## 📋 Tabla de Contenidos
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- [Requisitos Previos](#requisitos-previos)
+- [Tecnologías](#tecnologías)
+- [Instalación](#instalación)
+- [Configuración](#configuración)
+- [Ejecución en Entorno Local](#ejecución-en-entorno-local)
+- [Despliegue](#despliegue)
+- [Estructura de Configuración](#estructura-de-configuración)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🔧 Requisitos Previos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Antes de comenzar, asegúrate de tener instalado lo siguiente en tu sistema:
 
-## Learning Laravel
+- **PHP 8.3.15** o superior
+- **Composer 2.4.1** o superior
+- **Node.js** (versión LTS recomendada)
+- **pnpm** (gestor de paquetes)
+- **Git**
+- **MySQL** o **PostgreSQL** (u otro motor de base de datos compatible)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Instalación de Requisitos
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#### PHP
+```bash
+# En Ubuntu/Debian
+sudo apt update
+sudo apt install php8.3 php8.3-cli php8.3-common php8.3-mysql php8.3-xml php8.3-curl php8.3-mbstring php8.3-zip
 
-## Laravel Sponsors
+# En macOS (usando Homebrew)
+brew install php@8.3
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# En Windows, descarga desde: https://windows.php.net/download/
+```
 
-### Premium Partners
+#### Composer
+```bash
+# Descarga e instalación global
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+sudo mv composer.phar /usr/local/bin/composer
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# Verifica la instalación
+composer --version
+```
 
-## Contributing
+#### pnpm
+```bash
+# Instalación global con npm
+npm install -g pnpm
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Verifica la instalación
+pnpm --version
+```
 
-## Code of Conduct
+## 🛠️ Tecnologías
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+El proyecto utiliza las siguientes tecnologías:
 
-## Security Vulnerabilities
+| Tecnología | Versión |
+|-----------|---------|
+| PHP | 8.3.15 |
+| Composer | 2.4.1 |
+| Laravel | ^12.0 |
+| Alpine.js | ^3.15.2 |
+| Tailwind CSS | ^4.1.17 |
+| Vite | ^7.0.7 |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📦 Instalación
 
-## License
+### 1. Clonar el Repositorio
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+git clone https://github.com/davidsandez/atentidoc-dashboard.git
+cd atentidoc-dashboard
+```
+
+### 2. Instalar Dependencias de PHP
+
+```bash
+composer install
+```
+
+### 3. Configurar el Archivo de Entorno
+
+Crea el archivo `.env` a partir del ejemplo proporcionado:
+
+```bash
+cp .env.example .env
+```
+
+### 4. Generar la Clave de Aplicación
+
+```bash
+php artisan key:generate
+```
+
+### 5. Instalar Dependencias de Node.js
+
+```bash
+pnpm install
+```
+
+## ⚙️ Configuración
+
+### Conexión a la Base de Datos
+
+Edita el archivo `.env` en la raíz del proyecto y configura las siguientes variables con las credenciales de tu base de datos:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nombre_base_datos
+DB_USERNAME=usuario
+DB_PASSWORD=contraseña
+```
+
+**Nota:** La aplicación web utiliza una base de datos propia para gestionar la sesión de los usuarios que acceden al panel de administración.
+
+### Conexión a la API
+
+La aplicación define la ruta de acceso al backend desde el que obtiene sus datos en el apartado `api`, dentro del archivo `config/services.php`.
+
+Edita este archivo para configurar la URL de tu API:
+
+```php
+'api' => [
+    'base_url' => env('API_BASE_URL', 'https://api.atentidoc.com'),
+    // Otras configuraciones...
+],
+```
+
+Puedes definir la variable `API_BASE_URL` en tu archivo `.env`:
+
+```env
+API_BASE_URL=https://dev.atentidoc.com.ar
+```
+
+### Ejecutar Migraciones
+
+Solo en los casos en que se esté desee apuntar a una base de datos nueva, se ejecuta el comando para realizar las migraciones:
+
+```bash
+php artisan migrate
+```
+
+## 🚀 Ejecución en Entorno Local
+
+Para ejecutar la aplicación en tu entorno de desarrollo local, necesitas iniciar dos procesos:
+
+### 1. Servidor de Desarrollo de Vite
+
+En una terminal, ejecuta:
+
+```bash
+pnpm dev
+```
+
+Este comando iniciará el servidor de desarrollo de Vite para compilar los assets (CSS, JavaScript) en tiempo real.
+
+### 2. Servidor de Laravel
+
+En otra terminal, ejecuta:
+
+```bash
+php artisan serve
+```
+
+El servidor de Laravel estará disponible por defecto en: **http://localhost:8000**
+
+## 🌐 Despliegue
+
+### Variables de Entorno en Producción
+
+Cuando despliegues la aplicación en un servidor de producción, asegúrate de configurar las siguientes variables de entorno desde el panel de administración de tu proveedor de hosting:
+
+- `DB_CONNECTION`
+- `DB_HOST`
+- `DB_PORT`
+- `DB_DATABASE`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+- `API_BASE_URL`
+
+### Compilación de Assets para Producción
+
+Antes de desplegar, compila los assets para producción:
+
+```bash
+pnpm build
+```
+
+### Optimización de Laravel
+
+Ejecuta los siguientes comandos para optimizar la aplicación:
+
+```bash
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+## 📁 Estructura de Configuración
+
+```
+atentidoc-panel-web/
+├── config/
+│   └── services.php          # Configuración de la API
+├── .env                       # Variables de entorno (local)
+├── .env.example              # Plantilla de variables de entorno
+├── composer.json             # Dependencias de PHP
+├── package.json              # Dependencias de Node.js
+├── vite.config.js            # Configuración de Vite
+└── tailwind.config.js        # Configuración de Tailwind CSS
+```
+
+## 📝 Notas Adicionales
+
+- Asegúrate de que el directorio `storage` y `bootstrap/cache` tengan permisos de escritura.
+- Mantén el archivo `.env` fuera del control de versiones (ya está incluido en `.gitignore`).
+- Para más información sobre Laravel, visita la [documentación oficial](https://laravel.com/docs).
+
+## 🤝 Contribución
+
+Si deseas contribuir al proyecto, por favor sigue las guías de contribución establecidas.
+
+El repositorio usará un sistema de ramas simple, claro y escalable:
+
+- **master** → rama de producción  
+- **dev** → rama de desarrollo  
+- **feat/*** → ramas por funcionalidad, se integran a *dev* mediante pull requests
