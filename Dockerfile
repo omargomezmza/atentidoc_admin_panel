@@ -59,7 +59,7 @@ RUN composer run-script post-autoload-dump --no-interaction
 RUN pnpm build
 
 # ===== LIMPIAR DEPENDENCIAS DE DESARROLLO =====
-# RUN pnpm prune --prod
+RUN pnpm prune --prod
 
 # ===== CREAR DIRECTORIOS Y PERMISOS =====
 RUN mkdir -p \
