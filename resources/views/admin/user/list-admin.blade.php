@@ -99,94 +99,9 @@
         <h2 class="text-xl font-bold text-gray-800 mb-4">Actividad Reciente</h2>
         <p class="text-gray-600">Aquí se mostrará la actividad reciente del sistema...</p>
     </div> --}}
-    
-    <!-- Tabla -->
-    {{-- <x-admin.table 
-        :columns="[
-            [
-                'label' => 'Usuario',
-                'field' => 'name',
-                'component' => 'admin.table-avatar',
-                'nameField' => 'name',
-                'imageField' => 'avatar',
-                'subtitleField' => 'email',
-            ],
-            [
-                'label' => 'Rol',
-                'field' => 'role',
-                'component' => 'admin.table-badge',
-                'colorMap' => [
-                    'admin' => 'purple',
-                    'profesional' => 'blue',
-                    'paciente' => 'green',
-                ],
-                'labelMap' => [
-                    'admin' => 'Administrador',
-                    'profesional' => 'Profesional',
-                    'paciente' => 'Paciente',
-                ],
-            ],
-            [
-                'label' => 'Estado',
-                'field' => 'status',
-                'component' => 'admin.table-badge',
-                'colorMap' => [
-                    'active' => 'green',
-                    'inactive' => 'gray',
-                ],
-                'labelMap' => [
-                    'active' => 'Activo',
-                    'inactive' => 'Inactivo',
-                ],
-            ],
-            [
-                'label' => 'Fecha de Registro',
-                'field' => 'created_at',
-                'component' => 'admin.table-date',
-            ],
-            [
-                'label' => 'Acciones',
-                'field' => 'id',
-                'component' => 'admin.table-actions',
-                'editRoute' => fn($row) => route('admin.users.edit', $row->id),
-                'deleteRoute' => fn($row) => route('admin.users.destroy', $row->id),
-                'cellClass' => 'text-right',
-            ],
-        ]"
-        :data="[
-
-        ]"
-        emptyMessage="No hay usuarios registrados"
-    /> --}}
 
     @php
          // Simulación de datos (reemplazar con query real)
-        /* $requests = collect([
-            (object)[
-                'id' => 1,
-                'patient_name' => 'Juan Pérez',
-                'patient_email' => 'juan@example.com',
-                'professional_name' => 'Dra. María García',
-                'status' => 'pending',
-                'created_at' => now()->subDays(2),
-            ],
-            (object)[
-                'id' => 2,
-                'patient_name' => 'Ana López',
-                'patient_email' => 'ana@example.com',
-                'professional_name' => 'Dr. Carlos Rodríguez',
-                'status' => 'approved',
-                'created_at' => now()->subDays(5),
-            ],
-            (object)[
-                'id' => 3,
-                'patient_name' => 'Pedro Martínez',
-                'patient_email' => 'pedro@example.com',
-                'professional_name' => 'Dra. Laura Fernández',
-                'status' => 'rejected',
-                'created_at' => now()->subWeek(),
-            ],
-        ]); */
     
         $content = is_null($list) ? [] : array_map(fn ($el) => (object) $el, $list['content']); 
         //dd($list, $content);
@@ -223,8 +138,8 @@
                 
             ],
             [
-                'label' => 'Fecha de Nacimiento',
-                'field' => 'birthDate',
+                'label' => 'Fecha',
+                'field' => 'created_at',
                 'component' => 'admin.table-date',
                 'format' => 'd/m/Y',
             ],

@@ -14,7 +14,7 @@
         :fields="[
             [
                 'type' => 'text',
-                'name' => 'firstName',
+                'name' => 'first_name',
                 'label' => 'Nombre',
                 'placeholder' => 'Ingrese su nombre',
                 'required' => true,
@@ -22,7 +22,7 @@
             ],
             [
                 'type' => 'text',
-                'name' => 'lastname',
+                'name' => 'last_name',
                 'label' => 'Apellido',
                 'placeholder' => 'Ingrese su apellido',
                 'required' => true,
@@ -44,14 +44,14 @@
             ],
             [
                 'type' => 'number',
-                'name' => 'documentId',
+                'name' => 'document_id',
                 'label' => 'Número de Documento',
                 'placeholder' => '123456789',
                 'required' => true,
             ],
             [
                 'type' => 'date',
-                'name' => 'birthDate',
+                'name' => 'birth_date',
                 'label' => 'Fecha de Nacimiento',
                 'placeholder' => 'Ingrese su fecha de nacimiento',
                 'required' => true,
@@ -76,20 +76,6 @@
                 'required' => false,
                 'helperText' => 'Mínimo 8 caracteres, incluya mayúsculas, minúsculas y números',
             ],
-            /* 
-                [
-                    'type' => 'select',
-                    'name' => 'role',
-                    'label' => 'Rol del Usuario',
-                    'required' => true,
-                    'options' => [
-                        'ADMIN' => 'Administrador',
-                        'DOCTOR' => 'Profesional de Salud',
-                        'PATIENT' => 'Paciente',
-                    ],
-                    'action' => 'role = $event.target.value; isAdmin = (role === \'ADMIN\'); isProfessional = (role === \'DOCTOR\'); isPatient = (role === \'PATIENT\')',
-                ], 
-            */
             [
                 'type' => 'checkbox-group',
                 'name' => 'role',
@@ -118,7 +104,7 @@
                 'fields' => [
                     [
                         'type' => 'text',
-                        'name' => 'licenseNumber',
+                        'name' => 'license_number',
                         'label' => 'Número de Licencia',
                         'placeholder' => 'MP-12345',
                         'required' => true,
@@ -130,19 +116,6 @@
                         'placeholder' => 'Calle n° 123',
                         'required' => true,
                     ],
-
-                    /* 
-                        [
-                            'type' => 'select-2',
-                            'name' => 'specialty',
-                            'label' => 'Especialidad',
-                            'required' => true,
-                            'optValue' => 'id',
-                            'optLabel' => 'name',
-                            'options' => $specialties
-                        ], 
-                    */
-
                     [
                         'type' => 'multi-select',
                         'name' => 'specialties',
@@ -165,23 +138,10 @@
                         'rows' => 4,
                         'helperText' => 'Máximo 500 caracteres',
                     ],
-                    /* [
-                        'type' => 'select',
-                        'name' => 'specialty',
-                        'label' => 'Especialidad',
-                        'required' => true,
-                        'options' =>
-                            [
-                                'cardiology' => 'Cardiología',
-                                'neurology' => 'Neurología',
-                                'pediatrics' => 'Pediatría',
-                                'general' => 'Medicina General',
-                            ], 
-                        
-                    ], */
+                    
                     [
                         'type' => 'number',
-                        'name' => 'experienceYear',
+                        'name' => 'experience_years',
                         'label' => 'Años de Experiencia',
                         'min' => 0,
                         'max' => 50,
@@ -196,7 +156,7 @@
 
                     [
                         'type' => 'number',
-                        'name' => 'consultationPrice',
+                        'name' => 'consultation_price',
                         'label' => 'Precio de Consulta',
                         'min' => 0,
                         'max' => 50,
@@ -213,14 +173,14 @@
                     ],
                     [
                         'type' => 'number',
-                        'name' => 'patientsCount',
+                        'name' => 'patients_count',
                         'label' => 'Cantidad de Pacientes',
                         'helperText' => 'Cantidad de pacientes atendidos',
                         'min' => 0,
                     ],
                     [
                         'type' => 'number',
-                        'name' => 'ratingsCount',
+                        'name' => 'ratings_count',
                         'label' => 'Cantidad de votaciones',
                         'helperText' => 'Cantidad de pacientes que otorgaron puntuación',
                         'min' => 0,
@@ -228,7 +188,7 @@
                     ],
                     [
                         'type' => 'number',
-                        'name' => 'ratingsSum',
+                        'name' => 'ratings_sum',
                         'label' => 'Puntuación obtenida',
                         'helperText' => 'Puntuación otorgada a este profesional por parte de los pacientes',
                         'min' => 0,
@@ -254,7 +214,7 @@
                     ],
                     [
                         'type' => 'text',
-                        'name' => 'affiliateNumber',
+                        'name' => 'affiliate_number',
                         'label' => 'Número de afiliado',
                         'placeholder' => 'Ingrese su número de afiliado a obra social',
                         'required' => false,
@@ -263,26 +223,11 @@
             ],
             [
                 'type' => 'file',
-                'name' => 'avatar',
+                'name' => 'avatar_url',
                 'label' => 'Foto de Perfil',
                 'accept' => 'image/*',
                 'helperText' => 'Formatos permitidos: JPG, PNG. Máximo 2MB',
             ],
-            /* 
-                [
-                    'type' => 'checkbox',
-                    'name' => 'active',
-                    'label' => 'Usuario Activo',
-                    'helperText' => 'El usuario podrá acceder al sistema',
-                    'checked' => true,
-                ],
-                [
-                    'type' => 'checkbox',
-                    'name' => 'send_welcome_email',
-                    'label' => 'Enviar correo de bienvenida',
-                    'checked' => true,
-                ], 
-            */
         ]"
         :data="$user"
         :disabled="true"

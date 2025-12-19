@@ -57,139 +57,11 @@
     </div>
     
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        
-        {{-- <x-admin.stat-card 
-            title="Solicitudes"
-            value="10"
-            color="blue"
-            link="#"
-        >
-            <x-slot:icon>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-            </x-slot:icon>
-        </x-admin.stat-card> --}}
-        
-        {{-- <x-admin.stat-card 
-            title="Profesionales"
-            value="25"
-            color="teal"
-            link="#"
-        >
-            <x-slot:icon>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-            </x-slot:icon>
-        </x-admin.stat-card> --}}
-        
-        {{-- <x-admin.stat-card 
-            title="Pacientes"
-            value="150"
-            color="purple"
-            link="#"
-        >
-            <x-slot:icon>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-            </x-slot:icon>
-        </x-admin.stat-card> --}}
-        
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">    
     </div>
     
-    <!-- Additional Content Area -->
-    {{-- <div class="bg-white rounded-2xl shadow-md p-6">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Actividad Reciente</h2>
-        <p class="text-gray-600">Aquí se mostrará la actividad reciente del sistema...</p>
-    </div> --}}
-    
-    <!-- Tabla -->
-    {{-- <x-admin.table 
-        :columns="[
-            [
-                'label' => 'Usuario',
-                'field' => 'name',
-                'component' => 'admin.table-avatar',
-                'nameField' => 'name',
-                'imageField' => 'avatar',
-                'subtitleField' => 'email',
-            ],
-            [
-                'label' => 'Rol',
-                'field' => 'role',
-                'component' => 'admin.table-badge',
-                'colorMap' => [
-                    'admin' => 'purple',
-                    'profesional' => 'blue',
-                    'paciente' => 'green',
-                ],
-                'labelMap' => [
-                    'admin' => 'Administrador',
-                    'profesional' => 'Profesional',
-                    'paciente' => 'Paciente',
-                ],
-            ],
-            [
-                'label' => 'Estado',
-                'field' => 'status',
-                'component' => 'admin.table-badge',
-                'colorMap' => [
-                    'active' => 'green',
-                    'inactive' => 'gray',
-                ],
-                'labelMap' => [
-                    'active' => 'Activo',
-                    'inactive' => 'Inactivo',
-                ],
-            ],
-            [
-                'label' => 'Fecha de Registro',
-                'field' => 'created_at',
-                'component' => 'admin.table-date',
-            ],
-            [
-                'label' => 'Acciones',
-                'field' => 'id',
-                'component' => 'admin.table-actions',
-                'editRoute' => fn($row) => route('admin.users.edit', $row->id),
-                'deleteRoute' => fn($row) => route('admin.users.destroy', $row->id),
-                'cellClass' => 'text-right',
-            ],
-        ]"
-        :data="[
-
-        ]"
-        emptyMessage="No hay usuarios registrados"
-    /> --}}
-
     @php
-         // Simulación de datos (reemplazar con query real)
-        /* $requests = collect([
-            (object)[
-                'id' => 1,
-                'patient_name' => 'Juan Pérez',
-                'patient_email' => 'juan@example.com',
-                'professional_name' => 'Dra. María García',
-                'status' => 'pending',
-                'created_at' => now()->subDays(2),
-            ],
-            (object)[
-                'id' => 2,
-                'patient_name' => 'Ana López',
-                'patient_email' => 'ana@example.com',
-                'professional_name' => 'Dr. Carlos Rodríguez',
-                'status' => 'approved',
-                'created_at' => now()->subDays(5),
-            ],
-            (object)[
-                'id' => 3,
-                'patient_name' => 'Pedro Martínez',
-                'patient_email' => 'pedro@example.com',
-                'professional_name' => 'Dra. Laura Fernández',
-                'status' => 'rejected',
-                'created_at' => now()->subWeek(),
-            ],
-        ]); */
-
         $content = is_null($list) ? [] : array_map(fn ($el) => (object) $el, $list['content']); 
-        //dd($list, $content);
     @endphp
     <x-admin.table 
         :columns="[
@@ -224,7 +96,7 @@
             ],
             [
                 'label' => 'Fecha de Nacimiento',
-                'field' => 'birthDate',
+                'field' => 'birth_date',
                 'component' => 'admin.table-date',
                 'format' => 'd/m/Y',
             ],
@@ -258,11 +130,6 @@
         :emptyMessage="$error ?? null"
         :error="isset($error) && !is_null($error)"
     />
-
-    <!-- Botón para abrir -->
-    {{-- <x-modal-trigger target="simple-modal">
-        Abrir Modal Simple
-    </x-modal-trigger> --}}
 
     <!-- Modal -->
     <x-modal name="simple-modal" title="¿Eliminar Usuario?" size="md">

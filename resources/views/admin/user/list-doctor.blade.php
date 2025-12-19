@@ -92,18 +92,10 @@
             </x-slot:icon>
         </x-admin.stat-card> --}}
         
-    </div>
-    
-    <!-- Additional Content Area -->
-    {{-- <div class="bg-white rounded-2xl shadow-md p-6">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Actividad Reciente</h2>
-        <p class="text-gray-600">Aquí se mostrará la actividad reciente del sistema...</p>
-    </div> --}}
-    
+    </div>    
 
     @php
         $content = is_null($list) ? [] : array_map(fn ($el) => (object) $el, $list['content']); 
-        //dd($list, $content);
     @endphp
     <x-admin.table 
         :columns="[
@@ -138,7 +130,7 @@
             ],
             [
                 'label' => 'Fecha de Nacimiento',
-                'field' => 'birthDate',
+                'field' => 'birth_date',
                 'component' => 'admin.table-date',
                 'format' => 'd/m/Y',
             ],
@@ -172,11 +164,6 @@
         :emptyMessage="$error ?? null"
         :error="isset($error) && !is_null($error)"
     />
-
-    <!-- Botón para abrir -->
-    {{-- <x-modal-trigger target="simple-modal">
-        Abrir Modal Simple
-    </x-modal-trigger> --}}
 
     <!-- Modal -->
     <x-modal name="simple-modal" title="¿Eliminar Usuario?" size="md">
